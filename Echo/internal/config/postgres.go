@@ -2,7 +2,6 @@ package config
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"os"
 
@@ -13,39 +12,21 @@ import (
 // DB global database connection instance
 var DB *sql.DB
 
-// Environment variable keys
-const (
-	EnvHost     = "PG_SQL_HOST"
-	EnvPort     = "PG_SQL_PORT"
-	EnvUser     = "PG_SQL_USER"
-	EnvPassword = "PG_SQL_PASSWORD"
-	EnvDBName   = "PG_SQL_NAME"
-)
-
 // InitDB initializes the database connection
 func InitDB() {
+	// Load environment variables from .env file
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
 
-	// Read the PostgreSQL configuration from environment variables
-	host := os.Getenv(EnvHost)
-	port := os.Getenv(EnvPort)
-	user := os.Getenv(EnvUser)
-	password := os.Getenv(EnvPassword)
-	dbname := os.Getenv(EnvDBName)
+	// Read the PostgreSQL DSN from environment variable
+	dsn := os.Getenv("PG_SQL_DSN")
 
-	// Check if any required environment variable is missing
-	if host == "" || port == "" || user == "" || password == "" || dbname == "" {
-		log.Fatalf("One or more required environment variables are missing: %s, %s, %s, %s, %s",
-			EnvHost, EnvPort, EnvUser, EnvPassword, EnvDBName)
+	// Check if the DSN is empty
+	if dsn == "" {
+		log.Fatalf("PG_SQL_DSN environment variable is not set")
 	}
-
-	// Build the PostgreSQL connection string
-	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		// Read the database configuration from the environment variable
-		host, port, user, password, dbname)
 
 	// Open the database connection
 	DB, err = sql.Open("postgres", dsn)
@@ -53,7 +34,7 @@ func InitDB() {
 		log.Fatalf("Unable to connect to database: %v", err)
 	}
 
-	// Test database connection
+	// Test the database connection
 	if err = DB.Ping(); err != nil {
 		log.Fatalf("Unable to Ping database: %v", err)
 	}
