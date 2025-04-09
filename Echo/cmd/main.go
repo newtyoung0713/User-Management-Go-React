@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"User-Management-Go-React/Echo/internal/config"
 	"User-Management-Go-React/Echo/internal/model"
 
 	"github.com/labstack/echo/v4"
@@ -13,16 +14,26 @@ import (
 )
 
 func main() {
-	// Initialize the database
-	db, err := initDB()
+	// Initialize the database (no return value)
+	config.InitDB()
+
+	// Use the DB instance that has been initialized in the config package
+	db, err := gorm.Open(postgres.New(postgres.Config{
+		Conn: config.DB, // Use the *sql.DB from config
+	}), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("failed to connect to database: %v", err)
 	}
 
-	// Auto-migrate the database schema
-	err = db.AutoMigrate(&model.User{})
-	if err != nil {
-		log.Fatalf("failed to migrate database: %v", err)
+	// Only run AutoMigrate if table doesn't exist
+	var tableExists bool
+	db.Raw("SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'users')").Scan(&tableExists)
+
+	if !tableExists {
+		err = db.AutoMigrate(&model.User{})
+		if err != nil {
+			log.Fatalf("failed to migrate database: %v", err)
+		}
 	}
 
 	// Echo instance
@@ -39,7 +50,7 @@ func main() {
 
 	e.GET("/users", func(c echo.Context) error {
 		var users []model.User
-		result := db.Find(&users)
+		result := db.Limit(5).Find(&users)
 		if result.Error != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": result.Error.Error()})
 		}
@@ -61,14 +72,4 @@ func main() {
 
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
-}
-
-// Initialize the database connection
-func initDB() (*gorm.DB, error) {
-	dsn := "host=localhost user=your_user password=your_password dbname=your_db port=5432 sslmode=disable TimeZone=Asia/Shanghai"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		return nil, err
-	}
-	return db, nil
 }
