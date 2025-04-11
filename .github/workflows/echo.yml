@@ -1,0 +1,60 @@
+name: Echo CI
+
+on:
+  push:
+    paths:
+      - "Echo/**"
+    branches:
+      - main
+      - develop
+      - "release/**"
+      - "hotfix/**"
+      - "feature/**"
+  pull_request:
+    paths:
+      - "Echo/**"
+    branches:
+      - main
+      - develop
+      - "release/**"
+      - "hotfix/**"
+      - "feature/**"
+
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.23.2"
+
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-mod-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-mod-
+
+      - name: Install dependencies
+        working-directory: Echo
+        run: go mod download
+
+      - name: Tidy Go modules
+        working-directory: Echo
+        run: go mod tidy
+
+      - name: Run Go tests
+        working-directory: Echo
+        run: go test ./...
+
+      - name: Build backend
+        working-directory: Echo
+        run: go build -v ./...

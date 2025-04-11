@@ -1,0 +1,67 @@
+name: React CI
+
+on:
+  push:
+    paths:
+      - "ums-react/**"
+    branches:
+      - main
+      - develop
+      - "release/**"
+      - "hotfix/**"
+      - "feature/**"
+  pull_request:
+    paths:
+      - "ums-react/**"
+    branches:
+      - main
+      - develop
+      - "release/**"
+      - "hotfix/**"
+      - "feature/**"
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.13.0"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Cache pnpm store
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        working-directory: ums-react
+        run: pnpm install
+
+      - name: Check Type
+        run: pnpm type-check
+
+      - name: Check Format
+        run: pnpm format
+
+      - name: Run Lint
+        working-directory: ums-react
+        run: pnpm run lint
+
+      - name: Run tests
+        working-directory: ums-react
+        run: pnpm test
+
+      - name: Build React App
+        working-directory: ums-react
+        run: pnpm run build
