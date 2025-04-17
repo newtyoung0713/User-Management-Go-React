@@ -19,15 +19,9 @@ export function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const response = await axios.post("http://localhost:1323/register", formData);
-      localStorage.setItem("token", response.data.token);
-      navigate("/login");
-      console.log(response.data.message);
-      console.log("Register successfully:", formData);
-    } catch (err) {
-      setError("Failure for register: " + err + " Please contact to our team.");
-    }
+    // Reset error before new validation
+    setError("");
+
     const { username, email, password, confirmPassword } = formData;
     
     if (!username || !email || !password || !confirmPassword) {
@@ -38,6 +32,26 @@ export function Register() {
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
+    }
+
+    try {
+      // Send data as JSON instead of FormData
+      await axios.post("/users", {
+        username,
+        email,
+        password,
+        confirmPassword
+      });
+      console.log("Registration successful");
+      navigate("/login");
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        // Handle error messages from the backend
+        const errorMessage = err.response?.data?.error || err.message;
+        setError(errorMessage);
+      } else {
+        setError("An unexpected error occurred");
+      }
     }
   };
 

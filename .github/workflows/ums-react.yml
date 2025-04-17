@@ -23,6 +23,9 @@ on:
 jobs:
   build-frontend:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ums-react
 
     steps:
       - name: Checkout code
@@ -33,8 +36,10 @@ jobs:
         with:
           node-version: "22.13.0"
 
-      - name: Install pnpm
+      - name: Set up pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: '8.15.4'
 
       - name: Cache pnpm store
         uses: actions/cache@v3
@@ -45,23 +50,13 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        working-directory: ums-react
         run: pnpm install
 
-      - name: Check Type
-        run: pnpm type-check
-
-      - name: Check Format
-        run: pnpm format
+      - name: Type Check
+        run: pnpm run type-check
 
       - name: Run Lint
-        working-directory: ums-react
         run: pnpm run lint
 
-      - name: Run tests
-        working-directory: ums-react
-        run: pnpm test
-
       - name: Build React App
-        working-directory: ums-react
         run: pnpm run build

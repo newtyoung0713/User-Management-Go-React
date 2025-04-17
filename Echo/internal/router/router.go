@@ -9,4 +9,5 @@ import (
 func RegisterRoutes(e *echo.Echo, userHandler *handler.UserHandler) {
 	e.GET("/users", userHandler.GetUsers)
 	e.POST("/users", userHandler.CreateUser)
+	e.POST("/login", userHandler.Login)
 }
