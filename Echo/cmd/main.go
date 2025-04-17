@@ -39,6 +39,7 @@ func main() {
 	{
 		api.GET("/users", userHandler.GetUsers)
 		api.GET("/users/profile", userHandler.GetUserProfile)
+		api.POST("/users/logout", userHandler.Logout)
 	}
 
 	// Start the server
