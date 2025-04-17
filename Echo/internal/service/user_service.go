@@ -31,6 +31,12 @@ func (s *UserService) CreateUser(user *model.User, confirmPassword string) error
 		return errors.New("invalid email format")
 	}
 
+	// Check password strength level
+	strength := user.EvaluatePasswordStrength()
+	if strength == model.PasswordWeak {
+		return errors.New("password is too weak")
+	}
+
 	// Check if password and confirmPassword match
 	if user.Password != confirmPassword {
 		return errors.New("password and confirm password do not match")
@@ -70,4 +76,21 @@ func (s *UserService) Login(email, password string) (string, error) {
 	}
 
 	return token, nil
+}
+
+func (s *UserService) UpdateUser(user *model.User) error {
+	// Necessary logical processing is performed here to update the user information in the database
+	_, err := s.UserRepo.UpdateUser(user)
+	return err
+}
+
+func (s *UserService) DeleteUser(email string) error {
+	// First check if user exists
+	_, err := s.UserRepo.FindByEmail(email)
+	if err != nil {
+		return err
+	}
+
+	// Delete the user
+	return s.UserRepo.DeleteUser(email)
 }

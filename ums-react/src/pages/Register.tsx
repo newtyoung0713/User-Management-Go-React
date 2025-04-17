@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export function Register() {
   const [formData, setFormData] = useState({
@@ -99,6 +99,12 @@ export function Register() {
           onChange={handleInputChange}
           required
         />
+        <p className="text-center text-sm">
+          Already have an account?{" "}
+          <Link to="/login" className="text-blue-600 hover:text-blue-800">
+            Login here
+          </Link>
+        </p>
         <button type="submit" className="w-full bg-blue-600 text-white p-2">
           Register
         </button>

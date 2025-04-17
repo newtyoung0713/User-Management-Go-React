@@ -43,6 +43,31 @@ export function UserProfile() {
     fetchUserData();
   }, [navigate]);
 
+  const handleLogout = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      // Call logout endpoint
+      await axios.post(
+        "/users/logout",
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      // Clear token from localStorage
+      localStorage.removeItem("token");
+
+      // Redirect to login page
+      navigate("/login");
+    } catch (err) {
+      console.error("Error during logout", err);
+      // Even if the logout request fails, we still want to clear the token and redirect
+      localStorage.removeItem("token");
+      navigate("/login");
+    }
+  };
+
   return (
     <div className="flex flex-col items-center p-8">
       <h2 className="text-2xl font-semibold mb-4">User Profile</h2>
@@ -52,6 +77,12 @@ export function UserProfile() {
           <p>Email: {userData.email}</p>
           <p>Created At: {userData.created_at.toLocaleString()}</p>
           <p>Updated At: {userData.updated_at.toLocaleString()}</p>
+          <button
+            onClick={handleLogout}
+            className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+          >
+            Logout
+          </button>
         </div>
       ) : (
         <p>Loading user data...</p>

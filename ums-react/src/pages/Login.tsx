@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 interface LoginProps {
   setIsAuthenticated: (value: boolean) => void;
@@ -75,6 +75,12 @@ export function Login({ setIsAuthenticated }: LoginProps) {
           value={formData.password}
           onChange={handleInputChange}
         />
+        <p className="text-center text-sm">
+          Don't have an account?{" "}
+          <Link to="/register" className="text-blue-600 hover:text-blue-800">
+            Register here
+          </Link>
+        </p>
         <button type="submit" className="w-full bg-blue-600 text-white p-2">
           Login
         </button>

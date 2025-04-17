@@ -10,6 +10,6 @@ CREATE TABLE users (
     is_locked BOOLEAN,
     avatar_url TEXT,
     preferred_mfa_method TEXT,
-    is_deleted BOOLEAN DEFAULT FALSE,
+    deleted_at TIMESTAMP,
     CONSTRAINT chk_email_format CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')
 );
