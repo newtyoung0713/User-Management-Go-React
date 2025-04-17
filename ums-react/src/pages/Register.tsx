@@ -23,7 +23,7 @@ export function Register() {
     setError("");
 
     const { username, email, password, confirmPassword } = formData;
-    
+
     if (!username || !email || !password || !confirmPassword) {
       setError("All the fields are required.");
       return;
@@ -40,7 +40,7 @@ export function Register() {
         username,
         email,
         password,
-        confirmPassword
+        confirmPassword,
       });
       console.log("Registration successful");
       navigate("/login");
@@ -106,4 +106,4 @@ export function Register() {
       </form>
     </div>
   );
-};
+}

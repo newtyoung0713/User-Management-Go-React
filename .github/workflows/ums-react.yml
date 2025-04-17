@@ -1,15 +1,6 @@
 name: React CI
 
 on:
-  push:
-    paths:
-      - "ums-react/**"
-    branches:
-      - main
-      - develop
-      - "release/**"
-      - "hotfix/**"
-      - "feature/**"
   pull_request:
     paths:
       - "ums-react/**"
@@ -55,8 +46,14 @@ jobs:
       - name: Type Check
         run: pnpm run type-check
 
+      - name: Check Formatting
+        run: pnpm run format:check
+
       - name: Run Lint
         run: pnpm run lint
+
+      - name: Run Tests
+        run: pnpm run test
 
       - name: Build React App
         run: pnpm run build

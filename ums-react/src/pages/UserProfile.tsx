@@ -24,7 +24,7 @@ export function UserProfile() {
           navigate("/login"); // Redirect to login if no token found
           return;
         }
-        
+
         const response = await axios.get("/users/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -33,7 +33,7 @@ export function UserProfile() {
         const data = response.data;
         data.created_at = new Date(data.created_at);
         data.updated_at = new Date(data.updated_at);
-        
+
         setUserData(response.data);
       } catch (err) {
         console.error("Error fetching user data", err);

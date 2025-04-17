@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
-import "./App.css"
+import { useEffect, useState } from "react";
+import "./App.css";
 import axios from "axios";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { Register } from "./pages/Register";
@@ -25,31 +25,23 @@ function App() {
   }, []);
 
   if (loading) return <div>Loading...</div>;
-  
+
   return (
     <Router>
       <div>
-        <h1 className="text-4xl font-bold text-blue-500">
-          User Management System
-        </h1>
+        <h1 className="text-4xl font-bold text-blue-500">User Management System</h1>
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
-          <Route 
-            path="/profile" 
-            element={
-              isAuthenticated ? (
-                <UserProfile />
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            } 
+          <Route
+            path="/profile"
+            element={isAuthenticated ? <UserProfile /> : <Navigate to="/login" replace />}
           />
         </Routes>
       </div>
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;
