@@ -9,7 +9,7 @@ interface LoginProps {
 export function Login({ setIsAuthenticated }: LoginProps) {
   const [formData, setFormData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ export function Login({ setIsAuthenticated }: LoginProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { email, password } = formData;
-    
+
     if (!email || !password) {
       setError("All the fields are required.");
       return;
@@ -31,16 +31,16 @@ export function Login({ setIsAuthenticated }: LoginProps) {
     try {
       const response = await axios.post("/users/login", formData);
       const { token } = response.data;
-      
+
       // Save the token to local storage
       localStorage.setItem("token", token);
-      
+
       // Set axios default headers
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      
+
       // Update authentication status
       setIsAuthenticated(true);
-      
+
       console.log("Login successful");
       navigate("/profile");
     } catch (err) {
@@ -82,4 +82,4 @@ export function Login({ setIsAuthenticated }: LoginProps) {
       </form>
     </div>
   );
-};
+}

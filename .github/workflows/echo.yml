@@ -1,15 +1,6 @@
 name: Echo CI
 
 on:
-  push:
-    paths:
-      - "Echo/**"
-    branches:
-      - main
-      - develop
-      - "release/**"
-      - "hotfix/**"
-      - "feature/**"
   pull_request:
     paths:
       - "Echo/**"
@@ -51,9 +42,18 @@ jobs:
         working-directory: Echo
         run: go mod tidy
 
+      - name: Check Formatting
+        working-directory: Echo
+        run: |
+          if [ -n "$(gofmt -l .)" ]; then
+            echo "The following files are not properly formatted:"
+            gofmt -l .
+            exit 1
+          fi
+
       - name: Run Go tests
         working-directory: Echo
-        run: go test ./...
+        run: go test -v -race -cover ./...
 
       - name: Build backend
         working-directory: Echo

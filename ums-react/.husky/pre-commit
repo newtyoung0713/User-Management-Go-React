@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run lint-staged to check and fix code style issues
+pnpm lint-staged
+
+# Run format check on all files
+pnpm format:check
+
+# Run type checking
+pnpm type-check
+
+# Run tests
+pnpm test:coverage
+
+# Build the project
+pnpm build
