@@ -24,8 +24,8 @@ export function UserProfile() {
           navigate("/login"); // Redirect to login if no token found
           return;
         }
-        console.log("Token", token);
-        const response = await axios.get("http://localhost:1323/profile", {
+        
+        const response = await axios.get("/users/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -44,10 +44,10 @@ export function UserProfile() {
   }, [navigate]);
 
   return (
-    <div className="flex flex-col items-center p-8 bg-gray-100">
+    <div className="flex flex-col items-center p-8">
       <h2 className="text-2xl font-semibold mb-4">User Profile</h2>
       {userData ? (
-        <div className="w-full max-w-md p-4 bg-white rounded-lg shadow-lg">
+        <div className="w-full max-w-md p-4 rounded-lg shadow-lg">
           <h3 className="text-lg font-semibold">Welcome, {userData.username}</h3>
           <p>Email: {userData.email}</p>
           <p>Created At: {userData.created_at.toLocaleString()}</p>

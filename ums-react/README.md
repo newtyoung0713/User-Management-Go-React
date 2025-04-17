@@ -1,54 +1,74 @@
-# React + TypeScript + Vite
+# User Management System - React Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React frontend for the User Management System, built with TypeScript, Vite, and Shadcn UI.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🔐 JWT Authentication
+- 👥 User Management
+- 🎨 Modern UI with Shadcn UI
+- 📱 Responsive Design
+- 🌐 TypeScript Support
+- ⚡ Vite for Fast Development
 
-## Expanding the ESLint configuration
+## Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Node.js >= 16
+- pnpm >= 8
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Getting Started
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+3. Copy environment file:
+   ```bash
+   cp .env.example .env
+   ```
+4. Start development server:
+   ```bash
+   pnpm run dev
+   ```
+
+## Available Scripts
+
+- `pnpm run dev` - Start development server
+- `pnpm run build` - Build for production
+- `pnpm run preview` - Preview production build
+- `pnpm run lint` - Run ESLint
+- `pnpm run test` - Run tests
+
+## Project Structure
+
+```
+src/
+├── api/          # API client and endpoints
+├── components/   # Reusable components
+├── contexts/     # React contexts
+├── hooks/        # Custom hooks
+├── layouts/      # Layout components
+├── pages/        # Page components
+├── services/     # Business logic
+├── types/        # TypeScript types
+└── utils/        # Utility functions
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Environment Variables
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- `VITE_API_BASE_URL` - Backend API base URL
+- `VITE_JWT_STORAGE_KEY` - Local storage key for JWT token
+- `VITE_ENABLE_MOCK_API` - Enable mock API for development
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+This project is licensed under the MIT License.

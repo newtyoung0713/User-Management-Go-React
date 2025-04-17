@@ -2,7 +2,11 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export function Login() {
+interface LoginProps {
+  setIsAuthenticated: (value: boolean) => void;
+}
+
+export function Login({ setIsAuthenticated }: LoginProps) {
   const [formData, setFormData] = useState({
     email: "",
     password: ""
@@ -19,10 +23,25 @@ export function Login() {
     e.preventDefault();
     const { email, password } = formData;
     
+    if (!email || !password) {
+      setError("All the fields are required.");
+      return;
+    }
+
     try {
-      const response = await axios.post("http://localhost:1323/login", formData);
-      localStorage.setItem("token", response.data.token);
-      console.log("Login successfully:", formData);
+      const response = await axios.post("/users/login", formData);
+      const { token } = response.data;
+      
+      // Save the token to local storage
+      localStorage.setItem("token", token);
+      
+      // Set axios default headers
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      
+      // Update authentication status
+      setIsAuthenticated(true);
+      
+      console.log("Login successful");
       navigate("/profile");
     } catch (err) {
       console.error("Login failed: ", err);
@@ -30,12 +49,7 @@ export function Login() {
         email: "",
         password: "",
       });
-      setError("Email or Password is wrong. Please confirm again");
-    }
-
-    if (!email || !password) {
-      setError("All the fields are required.");
-      return;
+      setError("Email or Password is incorrect. Please try again.");
     }
   };
 
